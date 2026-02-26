@@ -1,5 +1,4 @@
 import { Paper, FormControl, FormLabel, FormHelperText } from "@mui/material";
-import { defaultConfig } from "next/dist/server/config-shared";
 
 export default function Login() {
 	return (
