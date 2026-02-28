@@ -13,6 +13,7 @@ export const Button = styled(MuiButton)(({ theme }) => ({
 }))
 
 export const Typography = styled(MuiTypography)(({ theme }) => ({
+	fontSize: '2.5rem',
 	fontWeight: 600,
 	color: theme.palette.primary.contrastText,
 	textAlign: 'left',

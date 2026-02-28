@@ -1,7 +1,8 @@
 import { createTheme } from '@mui/material'
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
-import { toggleButtonGroupClasses } from '@mui/material/ToggleButtonGroup';
 import CheckBoxOutlineBlankRoundedIcon from '@mui/icons-material/CheckBoxOutlineBlankRounded';
+// note: avoid importing toggleButtonGroupClasses - it can trigger HMR issues
+
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded';
 import { alpha } from '@mui/material/styles';
@@ -154,17 +155,7 @@ export const theme = createTheme({
 				}),
 			},
 		},
-		MuiToggleButtonGroup: {
-			styleOverrides: {
-				root: ({
-					borderRadius: '10px',
-					boxShadow: `0 4px 16px ${alpha(gray[400], 0.2)}`,
-					[`& .${toggleButtonGroupClasses.selected}`]: {
-						color: brand[500],
-					},
-				}),
-			},
-		},
+
 		MuiToggleButton: {
 			styleOverrides: {
 				root: ({
