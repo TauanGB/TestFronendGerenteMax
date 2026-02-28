@@ -12,9 +12,6 @@ import {
 import Image from "next/image";
 
 import { Stack, Card, Typography, Button } from "./style";
-
-import { Logo } from "@/assets/G-logo.png";
-
 import React from "react";
 
 export default function Login() {
