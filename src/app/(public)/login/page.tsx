@@ -2,7 +2,8 @@
 /**
  * Exigencia 6.0:
  * Tela de Login
- * "Exibir erros de validação inline" 
+ * "Exibir erros de validação inline"
+ * Barra de progresso ao submeter o formulario
  */
 
 import {
@@ -12,10 +13,9 @@ import {
   Box as MuiBox,
   FormControlLabel as MuiFormControlLabel,
   Checkbox as MuiCheckbox,
-  CircularProgress as MuiCircularProgress,
 } from "@mui/material";
 
-import { Stack, Card, Typography, Button } from "./style";
+import { Stack, Card, Typography, Button, CircularProgress } from "./style";
 
 import { z } from "zod";
 import { type SubmitHandler, useForm } from "react-hook-form";
@@ -56,6 +56,8 @@ export default function Login() {
   const onSubmit: SubmitHandler<LoginFormData> = async (data: LoginFormData) => {
     try {
       console.log(data);
+      // colocar uma pausa so pra checar se o loading esta funcionando
+      await new Promise((resolve) => setTimeout(resolve, 6000));
       console.log("Aqui e o onSubmit");
     } catch (error) {
       console.error(error);
@@ -117,7 +119,7 @@ export default function Login() {
             {...register("remember")}
           />
           <Button type="submit" fullWidth variant="outlined" disabled={isSubmitting}>
-            {isSubmitting ? <MuiCircularProgress size={20} color="primary" /> : "Logar"}
+            {isSubmitting ? <CircularProgress size={25} /> : "Logar"}
           </Button>
         </MuiBox>
       </Card>

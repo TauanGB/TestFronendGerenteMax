@@ -3,8 +3,13 @@ import { Stack as MuiStack,
 	Card as MuiCard,
 	Typography as MuiTypography,
 	Button as MuiButton,
-
+	CircularProgress as MuiCircularProgress,
 } from '@mui/material'
+import { blue } from '@mui/material/colors'
+
+export const CircularProgress = styled(MuiCircularProgress)({
+	color: blue[900],
+})
 
 export const Button = styled(MuiButton)(({ theme }) => ({
 	fontWeight: 600,
