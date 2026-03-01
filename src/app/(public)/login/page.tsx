@@ -1,4 +1,9 @@
 "use client";
+/**
+ * Exigencia 6.0:
+ * Tela de Login
+ * "Exibir erros de validação inline" 
+ */
 
 import {
   FormControl as MuiFormControl,
@@ -9,54 +14,45 @@ import {
   Checkbox as MuiCheckbox,
 } from "@mui/material";
 
-import Image from "next/image";
-
 import { Stack, Card, Typography, Button } from "./style";
+
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import React from "react";
 
+const loginSchema = z.object({
+  email: z.string().min(1, "E-mail é obrigatório.").email("E-mail inválido."),
+  password: z
+    .string()
+    .min(1, "Senha é obrigatória.")
+    .min(6, "Senha deve ter no mínimo 6 caracteres."),
+  remember: z.boolean().optional().default(false),
+});
+
+// Anotacoes de estudo, neste momento exato esta sendo declarado o tipo do formulario e suas regras de validacao
+// para que o useForm possa inferir o tipo do formulario
+// e assim evitar erros de tipo
+type LoginFormData = z.infer<typeof loginSchema>;
+
 export default function Login() {
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    mode: "onBlur",
+    defaultValues: {
+      email: "",
+      password: "",
+      remember: false,
+    },
+  });
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (emailError || passwordError) {
-      event.preventDefault();
-      return;
-    }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
-
-  const validateInputs = () => {
-    const email = document.getElementById("email") as HTMLInputElement;
-    const password = document.getElementById("password") as HTMLInputElement;
-
-    let isValid = true;
-
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage("Please enter a valid email address.");
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage("");
-    }
-
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage("Password must be at least 6 characters long.");
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage("");
-    }
-
-    return isValid;
+  const onSubmit = (data: LoginFormData) => {
+    console.log(data);
   };
 
   return (
@@ -67,7 +63,7 @@ export default function Login() {
         </Typography>
         <MuiBox
           component="form"
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           noValidate
           sx={{
             display: "flex",
@@ -79,11 +75,11 @@ export default function Login() {
           <MuiFormControl>
             <MuiFormLabel htmlFor="email">Email</MuiFormLabel>
             <MuiTextField
-              error={emailError}
-              helperText={emailErrorMessage}
+              error={!!errors.email}
+              helperText={errors.email?.message}
               id="email"
               type="email"
-              name="email"
+              {...register("email")}
               placeholder="seu@email.com"
               autoComplete="email"
               autoFocus
@@ -95,9 +91,9 @@ export default function Login() {
           <MuiFormControl>
             <MuiFormLabel htmlFor="password">Password</MuiFormLabel>
             <MuiTextField
-              error={passwordError}
-              helperText={passwordErrorMessage}
-              name="password"
+              error={!!errors.password}
+              helperText={errors.password?.message}
+              {...register("password")}
               placeholder="•••••••••"
               type="password"
               id="password"
