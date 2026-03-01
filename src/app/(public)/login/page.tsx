@@ -12,12 +12,13 @@ import {
   Box as MuiBox,
   FormControlLabel as MuiFormControlLabel,
   Checkbox as MuiCheckbox,
+  CircularProgress as MuiCircularProgress,
 } from "@mui/material";
 
 import { Stack, Card, Typography, Button } from "./style";
 
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import React from "react";
@@ -34,7 +35,8 @@ const loginSchema = z.object({
 // Anotacoes de estudo, neste momento exato esta sendo declarado o tipo do formulario e suas regras de validacao
 // para que o useForm possa inferir o tipo do formulario
 // e assim evitar erros de tipo
-type LoginFormData = z.infer<typeof loginSchema>;
+
+type LoginFormData = z.input<typeof loginSchema>;
 
 export default function Login() {
   const {
@@ -51,8 +53,13 @@ export default function Login() {
     },
   });
 
-  const onSubmit = (data: LoginFormData) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<LoginFormData> = async (data: LoginFormData) => {
+    try {
+      console.log(data);
+      console.log("Aqui e o onSubmit");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -105,11 +112,12 @@ export default function Login() {
             />
           </MuiFormControl>
           <MuiFormControlLabel
-            control={<MuiCheckbox value="remember" color="primary" />}
+            control={<MuiCheckbox color="primary" />}
             label="Manter Acesso"
+            {...register("remember")}
           />
-          <Button type="submit" fullWidth variant="outlined">
-            Logar
+          <Button type="submit" fullWidth variant="outlined" disabled={isSubmitting}>
+            {isSubmitting ? <MuiCircularProgress size={20} color="primary" /> : "Logar"}
           </Button>
         </MuiBox>
       </Card>
