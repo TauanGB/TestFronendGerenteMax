@@ -33,21 +33,15 @@ httpClient.interceptors.request.use(function (config: InternalAxiosRequestConfig
 
 httpClient.interceptors.response.use(
   function (response: AxiosResponse) {
-    if (response.status === 401 && response.config?.url !== "/api/auth/login") {
-      useAuthStore.getState().clearAuth();
-      router.push("/login");
-    }
+	//aqui vai acontecer quando a requisicao for bem-sucedida
     return response;
 	
   }, function (error: AxiosError) {
 
-    const url = error.config?.url ?? "";
-    const isLoginRoute = url.includes("/login");
-
-    //Tratacao do erro caso vindo da tela de login, como pedido!
-    if (isLoginRoute) {
-      return Promise.reject(error);
-    }
+	if (error.status === 401 && error.config?.url !== "/api/auth/login") {
+		useAuthStore.getState().clearAuth();
+		router.push("/login");
+	  }
 
     if (error.message === "Network Error") {
       return Promise.reject(
