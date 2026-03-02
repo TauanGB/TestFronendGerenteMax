@@ -54,6 +54,9 @@ export default function Sistemas() {
 		}
 		console.log(system);
 	};
+
+	
+
 	return (
 		<ChooseSystemBox>
 			<Typography variant="h3" gutterBottom>
