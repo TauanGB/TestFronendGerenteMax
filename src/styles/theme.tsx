@@ -230,7 +230,45 @@ export const theme = createTheme({
 				},
 			},
 
-		}
+		},
+		MuiCard: {
+			styleOverrides: {
+				root: ({ theme }) => ({
+					transition: 'all 0.3s ease-in-out',
+					boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.1)',
+					borderRadius: (theme.vars || theme).shape.borderRadius,
+					variants: [
+						{
+							props: {
+								variant: 'option',
+							},
+							style: {
+								boxShadow: 'none',
+								border: '1px solid',
+								borderColor: 'rgba(0,0,0,0.12)',
+								"&:hover": {
+									transform: "translateY(-2px)",
+								},
+								"&:active": {
+									transform: "translateY(0)",
+								},
+							},
+						},
+						{
+							props: {
+								variant: 'selected',
+							},
+							style: {
+								border: "1px solid",
+								borderColor: brand[500],
+								backgroundColor: alpha(brand[50], 0.45),
+								boxShadow: `0 0 0 2px ${alpha(brand[500], 0.2)}`,
+							},
+						},
+					],
+				}),
+			},
+		},
 	}
 });
 

@@ -1,5 +1,6 @@
+"use client";
 import { styled } from '@mui/material'
-import { Stack as MuiStack,
+import { Box as MuiBox,
 	Card as MuiCard,
 	Typography as MuiTypography,
 	Button as MuiButton,
@@ -25,18 +26,14 @@ export const Typography = styled(MuiTypography)(({ theme }) => ({
 	marginBottom: theme.spacing(2),
 }))
 
-export const Stack = styled(MuiStack)({
-	height: '100vh',
+export const Box = styled(MuiBox)(({ theme }) => ({
 	display: 'flex',
+	backgroundImage: 'radial-gradient(at 50% 50%, hsla(0, 0%, 0%, 0.00), hsla(225, 31%, 5%, 0.37))',
+	padding: theme.spacing(5),
+	height: '100vh',
 	justifyContent: 'center',
 	alignItems: 'center',
-	backgroundImage: 'radial-gradient(at 50% 50%, hsla(0, 0%, 0%, 0.00), hsla(225, 31%, 5%, 0.37))',
-	padding: '1.5rem',
-	fontFamily: 'Inter, sans-serif',
-    fontWeight: 400,
-    fontSize: '0.875rem',
-    lineHeight: 1.5,
-})
+}))
 
 export const Card = styled(MuiCard)(({ theme }) => ({
 	display: 'flex',

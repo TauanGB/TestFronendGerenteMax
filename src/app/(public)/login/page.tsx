@@ -15,14 +15,14 @@ import {
   Checkbox as MuiCheckbox,
 } from "@mui/material";
 
-import { Stack, Card, Typography, Button, CircularProgress } from "./style";
+import { Card, Typography, Button, CircularProgress } from "./style";
 
 import { z } from "zod";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { authService } from "@/services/authService";
 import { AuthCredentials } from "@/types/types";
-import AppSnackbar from "@/components/systemCard";
+import AppSnackbar from "@/components/SnackBar";
 import router from "next/router";
 import { useState } from "react";
 
@@ -80,7 +80,7 @@ export default function Login() {
   
 
   return (
-    <Stack>
+    <>
       <Card variant="outlined">
         <Typography variant="h5" gutterBottom>
           Login
@@ -143,6 +143,6 @@ export default function Login() {
         onClose={() => setShowSnackbar(false)}
         message={snackbarMessage}
       />
-    </Stack>
+    </>
   );
 }
