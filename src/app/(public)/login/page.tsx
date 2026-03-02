@@ -20,8 +20,11 @@ import { Stack, Card, Typography, Button, CircularProgress } from "./style";
 import { z } from "zod";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import React from "react";
+import { authService } from "@/services/authService";
+import { AuthCredentials } from "@/types/types";
+import AppSnackbar from "@/components/systemCard";
+import router from "next/router";
+import { useState } from "react";
 
 const loginSchema = z.object({
   email: z.string().min(1, "E-mail é obrigatório.").email("E-mail inválido."),
@@ -39,6 +42,9 @@ const loginSchema = z.object({
 type LoginFormData = z.input<typeof loginSchema>;
 
 export default function Login() {
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("Não foi possível encontrar sistemas");
+
   const {
     register,
     handleSubmit,
@@ -56,13 +62,22 @@ export default function Login() {
   const onSubmit: SubmitHandler<LoginFormData> = async (data: LoginFormData) => {
     try {
       console.log(data);
-      // colocar uma pausa so pra checar se o loading esta funcionando
-      await new Promise((resolve) => setTimeout(resolve, 6000));
-      console.log("Aqui e o onSubmit");
+      const credentials: AuthCredentials = { email: data.email, senha: data.password };
+      const response = await authService.discoverSystems(credentials);
+      if (response.length > 0) {
+        localStorage.setItem("systems", JSON.stringify(response));
+        localStorage.setItem("credentials", JSON.stringify(data));
+        router.push("/login/sistemas");
+      }
+      else {
+        setShowSnackbar(true);
+        setSnackbarMessage("Não foi possível encontrar sistemas");
+      }
     } catch (error) {
       console.error(error);
     }
   };
+  
 
   return (
     <Stack>
@@ -123,6 +138,11 @@ export default function Login() {
           </Button>
         </MuiBox>
       </Card>
+      <AppSnackbar
+        open={showSnackbar}
+        onClose={() => setShowSnackbar(false)}
+        message={snackbarMessage}
+      />
     </Stack>
   );
 }
