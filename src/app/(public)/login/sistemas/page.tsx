@@ -2,13 +2,17 @@
 
 import { SystemOption } from "@/types/types";
 import SystemCard from "@/components/SystemCard";
-import SearchBar from "@/components/SearchBar";
 import {
 	Grid as MuiGrid,
 	Divider as MuiDivider,
+	Button,
+	Box as MuiBox,
 } from "@mui/material";
 import { useState } from "react"
 import { ChooseSystemBox, Typography } from "./style";
+import SearchBar from "@/components/SearchBar";
+import { useAuthStore } from "@/store/useAuthStore";
+import router from "next/router";
 
 
 const sistemaExemplo: SystemOption = JSON.parse(`{
@@ -42,9 +46,20 @@ const sistemaExemplo: SystemOption = JSON.parse(`{
 	"sincronizado_LocalSN": true
 }`);
 
-const systems = [sistemaExemplo]; // nao es	quecer de remover e configurar para que venha somente os sistemas do banco de dados
 
 export default function Sistemas() {
+
+	if (!useAuthStore.getState().credentials || useAuthStore.getState().systems.length === 0) {
+		router.replace("/login");
+		return null;
+	  }	
+
+	const systems = useAuthStore.getState().systems;
+	const handleSearch = (search: string) => {
+		console.log(search);
+	};
+
+
 	const [selectedSystem, setSelectedSystem] = useState<SystemOption | null>(null);
 	const handleSelectSystem = (system: SystemOption) => {
 		if (selectedSystem?.id === system.id) {
@@ -54,21 +69,26 @@ export default function Sistemas() {
 		}
 		console.log(system);
 	};
-
 	
+
 
 	return (
 		<ChooseSystemBox>
 			<Typography variant="h3" gutterBottom>
 				Selecione o sistema para continuar
 			</Typography>
-			<SearchBar />
+			<SearchBar onSearch={handleSearch} />
 			<MuiDivider sx={{ width: "100%", my: 2 }} orientation="horizontal" />
-			<MuiGrid spacing={2} component="section">
-				{systems.map((system) => (
-					<SystemCard key={system.id} system={system} onSelect={handleSelectSystem} selected={selectedSystem?.id === system.id} />
-				))}
-			</MuiGrid>
+			<MuiBox sx={{ display: "flex", justifyContent: "space-between", flexDirection: "column", height: "100%" }}>
+				<MuiGrid spacing={2} component="section">
+					{systems.map((system) => (
+						<SystemCard key={system.id} system={system} onSelect={handleSelectSystem} selected={selectedSystem?.id === system.id} />
+					))}
+				</MuiGrid>
+				<Button variant="outlined" color="primary" onClick={() => {}} {...selectedSystem !== null ? { } : { disabled: true }}>
+					{selectedSystem !== null ? "Continuar" : "Selecione um sistema"}
+				</Button>
+			</MuiBox>
 		</ChooseSystemBox>
 	);
 }

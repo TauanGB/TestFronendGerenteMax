@@ -155,7 +155,6 @@ export const theme = createTheme({
 				}),
 			},
 		},
-
 		MuiToggleButton: {
 			styleOverrides: {
 				root: ({

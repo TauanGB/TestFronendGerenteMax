@@ -11,7 +11,7 @@
 
 
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
-import { useAuthStore } from "@/store/auth.store";
+import { useAuthStore } from "@/store/useAuthStore";
 import router from "next/router";
 
 
@@ -40,7 +40,7 @@ httpClient.interceptors.response.use(
   }, function (error: AxiosError) {
 
 	if (error.status === 401 && error.config?.url !== "/api/auth/login") {
-		useAuthStore.getState().clearAuth();
+		useAuthStore.getState().clearAuthFlow();
 		router.push("/login");
 	  }
 

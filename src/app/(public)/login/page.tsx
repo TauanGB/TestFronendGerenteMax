@@ -25,6 +25,7 @@ import { AuthCredentials } from "@/types/types";
 import AppSnackbar from "@/components/SnackBar";
 import router from "next/router";
 import { useState } from "react";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const loginSchema = z.object({
   email: z.string().min(1, "E-mail é obrigatório.").email("E-mail inválido."),
@@ -65,8 +66,8 @@ export default function Login() {
       const credentials: AuthCredentials = { email: data.email, senha: data.password };
       const response = await authService.discoverSystems(credentials);
       if (response.length > 0) {
-        localStorage.setItem("systems", JSON.stringify(response));
-        localStorage.setItem("credentials", JSON.stringify(data));
+        useAuthStore.getState().setCredentials(credentials);
+        useAuthStore.getState().setSystems(response);
         router.push("/login/sistemas");
       }
       else {
