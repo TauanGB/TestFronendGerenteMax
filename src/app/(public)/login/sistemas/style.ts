@@ -14,7 +14,7 @@ export const Card = styled(MuiCard)({
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  width: "100%",
+  maxWidth: "350px",
   height: "100%",
 });
 
@@ -22,6 +22,7 @@ export const ChooseSystemBox = styled(MuiPaper)({
   display: "flex",
   flexDirection: "column",
   padding: theme.spacing(2),
+  gap: theme.spacing(2),
   alignItems: "center",
   width: "80dvw",
   height: "75dvh",

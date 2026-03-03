@@ -31,10 +31,8 @@ interface AuthState {
   credentials: AuthCredentials | null;
   systems: SystemOption[];
 
-  // === Autenticado (persistido) - após signIn
   token: string | null;
 
-  // === Ações
   setCredentials: (c: AuthCredentials | null) => void;
   setSystems: (s: SystemOption[]) => void;
   setToken: (t: string | null) => void;
@@ -46,25 +44,23 @@ interface AuthState {
 // STORE
 // ==========================================================================
 
-export const useAuthStore = create<AuthFlowStateInterface>()(
+export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       credentials: null,
       systems: [],
+      token: null,
+      setCredentials: (credentials: AuthCredentials | null) => set({ credentials }),
+      setSystems: (systems: SystemOption[]) => set({ systems }),
+      clearAuthFlow: () => set({ systems: [], credentials: null, token: null }),
 
-      setCredentials: (credentials) => set({ credentials }),
-      setSystems: (systems) => set({ systems }),
-      clearAuthFlow: () => set({ systems: [], credentials: null }),
-
-
+      setToken: (token: string | null) => set({ token }),
+      signOut: () => set({ credentials: null, systems: [], token: null }),
     }),
     {
       name: "auth-storage",
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({ credentials: state.credentials, systems: state.systems }),
-      onRehydrateStorage: () => (state) => {
-        state?.setHasHydrated(true);
-      },
     }
   )
 );

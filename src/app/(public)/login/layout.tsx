@@ -1,4 +1,5 @@
-import { Box as MuiBox } from "@mui/material";
+'use client';
+
 import { Box } from "./style";
 
 export default function RootLayout({

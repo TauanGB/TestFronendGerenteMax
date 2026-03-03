@@ -23,7 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { authService } from "@/services/authService";
 import { AuthCredentials } from "@/types/types";
 import AppSnackbar from "@/components/SnackBar";
-import router from "next/router";
+import { useRouter } from "next/navigation"
 import { useState } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 
@@ -43,6 +43,7 @@ const loginSchema = z.object({
 type LoginFormData = z.input<typeof loginSchema>;
 
 export default function Login() {
+  const router = useRouter();
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("Não foi possível encontrar sistemas");
 
