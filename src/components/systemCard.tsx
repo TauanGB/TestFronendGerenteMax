@@ -13,8 +13,12 @@ type SystemCardProps = {
 export default function SystemCard({ system, selected, onSelect, disabled = false }: SystemCardProps) {
   return (
     <Card
-      variant="outlined"
       sx={(theme) => ({
+        width: "100%",
+        height: "100%",
+        flex: 1,
+        minWidth: "250px",
+        maxWidth: "350px",
         cursor: disabled ? "not-allowed" : "pointer",
         transition: "all .2s ease",
         borderColor: selected ? theme.palette.primary.main : theme.palette.divider,

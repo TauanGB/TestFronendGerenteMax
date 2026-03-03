@@ -1,66 +1,36 @@
 /**
  * @file useAuthStore.ts
- * @description Store global de autenticação (Zustand)
+ * @description Store global de autenticação (Zustand) para acesso aos dados do usuário
  *
  * Gerencia o estado de autenticação do usuário:
  * - Se está logado (`signedIn`)
- * - Se está no passo de seleção de sistema (`isSystemsStep`)
- * - Se o auth foi inicializado (`authReady`)
- * - Versão da sessão para invalidar cache (`sessionVersion`)
+ * - Credenciais do usuário (`credentials`)
+ * - Sistemas disponíveis (`systems`)
+ * - Token de autenticação (`token`)
  *
  * @example
- * const { signedIn, signOut } = useAuthStore();
- *
- * if (!signedIn) {
- *     router.push('/login');
- * }
+ * const { credentials, systems, token, setCredentials, setSystems, setToken, clearAuthFlow } = useAuthBase();
  */
 
 "use client";
 
-import { AuthCredentials, SystemOption } from "@/types/types";
-import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuthBase } from "./useAuthBase";
 
-// ==========================================================================
-// TIPOS
-// ==========================================================================
+export function useAuthStore() {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const token = useAuthBase((s) => s.token);
+  const clearAuthFlow = useAuthBase((s) => s.clearAuthFlow);
 
-interface AuthState {
-  // === Sessão (memória) - usados só durante o fluxo login → sistemas → signIn
-  credentials: AuthCredentials | null;
-  systems: SystemOption[];
+  const signedIn = token !== null;
 
-  token: string | null;
+  const signOut = () => {
+    clearAuthFlow();
+    queryClient.clear();
+    router.push("/login");
+  };
 
-  setCredentials: (c: AuthCredentials | null) => void;
-  setSystems: (s: SystemOption[]) => void;
-  setToken: (t: string | null) => void;
-  clearAuthFlow: () => void;   // limpa credentials + systems
-  signOut: () => void;         // limpa tudo + token
+  return { signedIn, signOut };
 }
-
-// ==========================================================================
-// STORE
-// ==========================================================================
-
-export const useAuthStore = create<AuthState>()(
-  persist(
-    (set) => ({
-      credentials: null,
-      systems: [],
-      token: null,
-      setCredentials: (credentials: AuthCredentials | null) => set({ credentials }),
-      setSystems: (systems: SystemOption[]) => set({ systems }),
-      clearAuthFlow: () => set({ systems: [], credentials: null, token: null }),
-
-      setToken: (token: string | null) => set({ token }),
-      signOut: () => set({ credentials: null, systems: [], token: null }),
-    }),
-    {
-      name: "auth-storage",
-      storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({ credentials: state.credentials, systems: state.systems }),
-    }
-  )
-);

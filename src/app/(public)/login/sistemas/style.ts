@@ -1,6 +1,6 @@
 import { theme } from "@/styles/theme";
 import { styled } from "@mui/material";
-import { Card as MuiCard, Paper as MuiPaper, Typography as MuiTypography } from "@mui/material";
+import { Card as MuiCard, Paper as MuiPaper, Typography as MuiTypography, Grid as MuiGrid } from "@mui/material";
 
 export const Typography = styled(MuiTypography)({
   textAlign: "left",
@@ -14,7 +14,7 @@ export const Card = styled(MuiCard)({
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  maxWidth: "350px",
+  width: "350px",
   height: "100%",
 });
 
@@ -27,4 +27,12 @@ export const ChooseSystemBox = styled(MuiPaper)({
   width: "80dvw",
   height: "75dvh",
   backgroundColor: theme.palette.background.paper,
+});
+
+export const SystemGrid = styled(MuiGrid)({
+  width: "100%",
+  display: "flex",
+  flexWrap: "wrap",
+  alignItems: "stretch",
+  padding: theme.spacing(2),
 });

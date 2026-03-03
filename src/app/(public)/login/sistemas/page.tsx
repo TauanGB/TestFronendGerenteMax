@@ -3,13 +3,12 @@
 import { SystemOption } from "@/types/types";
 import SystemCard from "@/components/SystemCard";
 import {
-	Grid as MuiGrid,
 	Divider as MuiDivider,
 	Button,
 	Box as MuiBox,
 } from "@mui/material";
 import { useState } from "react"
-import { ChooseSystemBox, Typography } from "./style";
+import { ChooseSystemBox, Typography, SystemGrid } from "./style";
 import SearchBar from "@/components/SearchBar";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation"
@@ -21,11 +20,8 @@ const sistemaExemplo: SystemOption[] = JSON.parse(
 
 export default function Sistemas() {
 	const router = useRouter();
+	const [selectedSystem, setSelectedSystem] = useState<SystemOption | null>(null);
 
-	if (!useAuthStore.getState().credentials || useAuthStore.getState().systems.length === 0) {
-		//router.replace("/login");
-		console.log("Não há credenciais ou sistemas");
-	}
 
 	const systems = sistemaExemplo;
 	const handleSearch = (search: string) => {
@@ -33,10 +29,10 @@ export default function Sistemas() {
 	};
 
 
-	const [selectedSystem, setSelectedSystem] = useState<SystemOption | null>(null);
 	const handleSelectSystem = (system: SystemOption) => {
 		if (selectedSystem?.id === system.id) {
 			setSelectedSystem(null);
+			router.push("/login");
 		} else {
 			setSelectedSystem(system);
 		}
@@ -58,11 +54,12 @@ export default function Sistemas() {
 				width: "100%",
 				py: 1,
 			}}>
-				<MuiGrid spacing={2} container sx={{ width: "100%" }}>
+				<SystemGrid columns={{ xs: 1, sm: 2, md: 3 }} columnSpacing={2} rowSpacing={2} container 
+				sx={{ width: "100%" }}>
 					{systems.map((system) => (
 						<SystemCard key={system.id} system={system} onSelect={handleSelectSystem} selected={selectedSystem?.id === system.id} />
 					))}
-				</MuiGrid>
+				</SystemGrid>
 			</MuiBox>
 			<Button variant="outlined" color="primary" onClick={() => { }} {...selectedSystem !== null ? {} : { disabled: true }}>
 				{selectedSystem !== null ? "Continuar" : "Selecione um sistema"}
